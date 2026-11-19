@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DUT-AI True SSO JWT Claims and Cookie Specification",
+  "description": "Standardized JWT claims issued by dut-ai-manager (IdP) and verified in-memory by dut-ai-quiz and meetly (Resource Servers).",
+  "type": "object",
+  "properties": {
+    "jwt_payload": {
+      "type": "object",
+      "required": ["sub", "email", "name", "role_names", "iat", "exp"],
+      "properties": {
+        "sub": {
+          "type": "string",
+          "description": "Unique user identifier across all DUT-AI services",
+          "examples": ["1042", "usr_98a7bc"]
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User email address",
+          "examples": ["admin@dut.udn.vn"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Full display name of user",
+          "examples": ["Nguyễn Văn A"]
+        },
+        "role_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of authorized roles",
+          "examples": [["admin", "teacher"], ["student"]]
+        },
+        "iat": {
+          "type": "integer",
+          "description": "Epoch timestamp when the token was issued"
+        },
+        "exp": {
+          "type": "integer",
+          "description": "Epoch timestamp when the token expires (default: 7 days)"
+        }
+      }
+    },
+    "cookie_policy": {
+      "type": "object",
+      "required": ["access_token", "domain", "path", "httpOnly", "secure", "sameSite"],
+      "properties": {
+        "access_token": {
+          "type": "string",
+          "description": "Name of the HTTP-only cookie holding the JWT"
+        },
+        "refresh_token": {
+          "type": "string",
+          "description": "Name of the HTTP-only cookie holding the refresh token"
+        },
+        "domain": {
+          "type": "string",
+          "const": ".dutai.io.vn",
+          "description": "Wildcard parent domain allowing cookies to be sent to workspace.dutai.io.vn and all subdomains"
+        },
+        "path": {
+          "type": "string",
+          "const": "/",
+          "description": "Root path to ensure cookie is available across /manage, /lms, and /meetly"
+        },
+        "httpOnly": {
+          "type": "boolean",
+          "const": true,
+          "description": "Prevents client-side script access for XSS protection"
+        },
+        "secure": {
+          "type": "boolean",
+          "const": true,
+          "description": "Forces transmission only over HTTPS connections"
+        },
+        "sameSite": {
+          "type": "string",
+          "enum": ["Lax", "None"],
+          "default": "Lax",
+          "description": "Permits top-level cross-subdomain navigations while guarding against CSRF"
+        }
+      }
+    }
+  }
+}

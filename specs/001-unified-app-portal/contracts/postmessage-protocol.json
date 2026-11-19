@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PortalPostMessageProtocol",
+  "description": "Cross-frame bi-directional messaging protocol between DUT-AI Portal Shell and embedded sub-applications.",
+  "type": "object",
+  "required": ["type", "source"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["DUT_PORTAL_SHELL", "DUT_PORTAL_CHILD"],
+      "description": "Indicates whether the message originates from the Parent Shell or an Embedded Child."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "DUT_ROUTE_CHANGE",
+        "DUT_FRAME_READY",
+        "DUT_SET_TITLE",
+        "DUT_SHELL_PING",
+        "DUT_SHELL_PONG",
+        "DUT_NAVIGATE_TO"
+      ],
+      "description": "Event message type."
+    },
+    "payload": {
+      "type": "object",
+      "description": "Event specific data payload.",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Relative path within the application (e.g. '/dashboard', '/tasks/new')."
+        },
+        "title": {
+          "type": "string",
+          "description": "Document page title to display in parent browser tab."
+        },
+        "moduleId": {
+          "type": "string",
+          "enum": ["quiz", "manage", "meetly"],
+          "description": "Identifier of the target or source module."
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "source": "DUT_PORTAL_CHILD",
+      "type": "DUT_ROUTE_CHANGE",
+      "payload": {
+        "moduleId": "meetly",
+        "path": "/tasks",
+        "title": "Meetly - Danh sách công việc"
+      }
+    },
+    {
+      "source": "DUT_PORTAL_SHELL",
+      "type": "DUT_NAVIGATE_TO",
+      "payload": {
+        "moduleId": "quiz",
+        "path": "/dashboard"
+      }
+    }
+  ]
+}

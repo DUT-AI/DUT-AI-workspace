@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PortalModuleConfiguration",
+  "description": "Validation schema for sub-applications registered in the DUT-AI Unified App Portal.",
+  "type": "object",
+  "required": ["modules", "defaultRoute", "siteName"],
+  "properties": {
+    "siteName": {
+      "type": "string",
+      "default": "DUT-AI Portal"
+    },
+    "defaultRoute": {
+      "type": "string",
+      "default": "/manage/dashboard"
+    },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "icon", "baseRoute", "targetOrigin", "defaultPath"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "baseRoute": {
+            "type": "string",
+            "pattern": "^/[a-z0-9-]+$"
+          },
+          "targetOrigin": {
+            "type": "string",
+            "format": "uri"
+          },
+          "defaultPath": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

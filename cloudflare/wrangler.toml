@@ -1,0 +1,11 @@
+name = "dutai-workspace-gateway"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+routes = [
+  { pattern = "workspace.dutai.io.vn/*", zone_name = "dutai.io.vn" }
+]
+
+[vars]
+ENVIRONMENT = "production"
+DEFAULT_ENTRY = "/manage/dashboard"
