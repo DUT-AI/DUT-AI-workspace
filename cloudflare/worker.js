@@ -150,6 +150,35 @@ export default {
         }
       }
 
+      // 7. Inject prefix into un-prefixed HTML assets for /manage using HTMLRewriter
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('text/html') && matchedPrefix === '/manage') {
+        return new HTMLRewriter()
+          .on('script[src]', {
+            element(el) {
+              const src = el.getAttribute('src');
+              if (src && src.startsWith('/assets/')) {
+                el.setAttribute('src', '/manage' + src);
+              }
+            },
+          })
+          .on('link[href]', {
+            element(el) {
+              const href = el.getAttribute('href');
+              if (
+                href &&
+                (href.startsWith('/assets/') ||
+                  href.startsWith('/icons/') ||
+                  href === '/logo.jpg' ||
+                  href === '/manifest.json')
+              ) {
+                el.setAttribute('href', '/manage' + href);
+              }
+            },
+          })
+          .transform(response);
+      }
+
       return response;
     } catch (err) {
       return new Response(renderErrorPage(targetRoute.name, err.message), {
