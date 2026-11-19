@@ -47,7 +47,27 @@ npm run build
 npm run start
 ```
 
-### 4. Chạy kiểm thử Unit Tests
+### 4. Triển khai với Docker & Docker Compose
+Hệ thống sử dụng **Next.js Standalone Mode** kết hợp Docker Multi-stage build (`node:20-alpine`) tối ưu dung lượng ảnh chỉ ~**150MB**:
+
+```bash
+# Build & Khởi chạy container ngầm
+docker compose up -d --build
+
+# Xem log thời gian thực
+docker compose logs -f
+
+# Kiểm tra trạng thái và healthcheck
+docker compose ps
+
+# Dừng hệ thống
+docker compose down
+```
+
+* Cấu hình cổng chạy máy chủ: Mặc định ánh xạ cổng thông qua biến `HOST_PORT` trong tệp `.env` (mặc định: `3000:3000`).
+* Healthcheck tự động: `http://127.0.0.1:3000/api/health`
+
+### 5. Chạy kiểm thử Unit Tests
 ```bash
 npx tsx tests/unit/modules.test.ts
 ```
