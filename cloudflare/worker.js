@@ -70,6 +70,34 @@ export default {
       }
     }
 
+    // 3.1. Fallback for Vite SPA static assets & root files from DUT-AI Management
+    if (!targetRoute) {
+      if (
+        pathname.startsWith('/assets/') ||
+        pathname === '/logo.jpg' ||
+        pathname === '/manifest.json' ||
+        pathname.startsWith('/icons/')
+      ) {
+        matchedPrefix = '/manage';
+        targetRoute = ROUTES['/manage'];
+      }
+    }
+
+    // 3.2. Fallback for sub-app API calls matching by Referer
+    if (!targetRoute && pathname.startsWith('/api/')) {
+      const referer = request.headers.get('Referer') || '';
+      if (referer.includes('/manage')) {
+        matchedPrefix = '/manage';
+        targetRoute = ROUTES['/manage'];
+      } else if (referer.includes('/lms')) {
+        matchedPrefix = '/lms';
+        targetRoute = ROUTES['/lms'];
+      } else if (referer.includes('/meetly')) {
+        matchedPrefix = '/meetly';
+        targetRoute = ROUTES['/meetly'];
+      }
+    }
+
     if (!targetRoute) {
       return new Response(renderNotFoundPage(pathname), {
         status: 404,
