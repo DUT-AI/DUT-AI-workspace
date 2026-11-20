@@ -138,12 +138,18 @@
         <style>
           :host {
             display: inline-block;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
             position: relative;
             z-index: 9999;
             vertical-align: middle;
+            line-height: 1.4 !important;
+            -webkit-font-smoothing: antialiased;
           }
-          * { box-sizing: border-box; }
+          *, *::before, *::after {
+            box-sizing: border-box !important;
+            margin: 0;
+            padding: 0;
+          }
           .waffle-btn {
             width: 38px;
             height: 38px;
@@ -180,29 +186,30 @@
             width: 320px;
             background: ${isDark ? '#1e293b' : '#ffffff'};
             border: 1px solid ${isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0'};
-            border-radius: 20px;
-            box-shadow: 0 20px 45px rgba(0,0,0, ${isDark ? '0.6' : '0.18'});
-            padding: 14px;
-            animation: fadeIn 0.15s ease-out;
+            border-radius: 18px;
+            box-shadow: 0 15px 35px -5px rgba(0,0,0, ${isDark ? '0.5' : '0.12'}), 0 0 0 1px rgba(0,0,0,0.04);
+            padding: 10px;
+            animation: fadeIn 0.12s ease-out;
+            z-index: 9999;
           }
           @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.96) translateY(-4px); }
+            from { opacity: 0; transform: scale(0.97) translateY(-3px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
           }
           .popover-header {
-            padding: 4px 6px 12px;
+            padding: 4px 8px 10px;
             border-bottom: 1px solid ${isDark ? 'rgba(255,255,255,0.08)' : '#f1f5f9'};
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
             justify-content: space-between;
           }
           .header-title {
             font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 0.08em;
+            font-weight: 700;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
-            color: #3b82f6;
+            color: ${isDark ? '#60a5fa' : '#2563eb'};
           }
           .portal-link {
             font-size: 11px;
@@ -211,23 +218,23 @@
             font-weight: 500;
             display: inline-flex;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
           }
           .portal-link:hover {
-            color: #3b82f6;
+            color: #2563eb;
             text-decoration: underline;
           }
           .app-list {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 2px;
           }
           .app-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px;
-            border-radius: 14px;
+            gap: 10px;
+            padding: 7px 8px;
+            border-radius: 12px;
             text-decoration: none;
             color: inherit;
             transition: all 0.15s ease;
@@ -240,23 +247,26 @@
             border: 1px solid ${isDark ? 'rgba(59,130,246,0.3)' : '#bfdbfe'};
           }
           .app-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
           }
-          .icon-manage { background: linear-gradient(135deg, #2563eb, #3b82f6); color: #fff; box-shadow: 0 4px 10px rgba(37,99,235,0.25); }
-          .icon-lms { background: linear-gradient(135deg, #059669, #10b981); color: #fff; box-shadow: 0 4px 10px rgba(16,185,129,0.25); }
-          .icon-meetly { background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: #fff; box-shadow: 0 4px 10px rgba(139,92,246,0.25); }
-          .icon-data { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; box-shadow: 0 4px 10px rgba(245,158,11,0.25); }
+          .icon-manage { background: linear-gradient(135deg, #2563eb, #3b82f6); color: #fff; box-shadow: 0 2px 6px rgba(37,99,235,0.25); }
+          .icon-lms { background: linear-gradient(135deg, #059669, #10b981); color: #fff; box-shadow: 0 2px 6px rgba(16,185,129,0.25); }
+          .icon-meetly { background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: #fff; box-shadow: 0 2px 6px rgba(139,92,246,0.25); }
+          .icon-data { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; box-shadow: 0 2px 6px rgba(245,158,11,0.25); }
           .icon-default { background: #64748b; color: #fff; }
 
           .app-info {
             flex: 1;
             min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
           }
           .app-name-row {
             display: flex;
@@ -264,33 +274,34 @@
             gap: 6px;
           }
           .app-name {
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 600;
             color: ${isDark ? '#f8fafc' : '#0f172a'};
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            line-height: 1.3 !important;
           }
           .app-desc {
-            font-size: 11.5px;
+            font-size: 11px;
             color: ${isDark ? '#94a3b8' : '#64748b'};
-            line-height: 1.4;
+            line-height: 1.3 !important;
             margin-top: 2px;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
+            white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
           }
           .badge-current {
             font-size: 10px;
             font-weight: 600;
-            padding: 2px 8px;
+            padding: 1px 7px;
             border-radius: 9999px;
-            background: #2563eb;
-            color: #fff;
+            background: ${isDark ? '#1e40af' : '#dbeafe'};
+            color: ${isDark ? '#bfdbfe' : '#1d4ed8'};
             white-space: nowrap;
             flex-shrink: 0;
-            line-height: 1.4;
+            line-height: 1.4 !important;
+            letter-spacing: 0;
           }
         </style>
 
