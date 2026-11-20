@@ -70,7 +70,7 @@ export default {
       }
     }
 
-    // 3.1. Fallback for Vite SPA static assets & root files from DUT-AI Management
+    // 3.1. Fallback for static assets & root files from DUT-AI Management
     if (!targetRoute) {
       if (
         pathname.startsWith('/assets/') ||
@@ -83,18 +83,31 @@ export default {
       }
     }
 
-    // 3.2. Fallback for sub-app API calls matching by Referer
-    if (!targetRoute && pathname.startsWith('/api/')) {
+    // 3.2. Fallback for sub-app requests (Next.js assets, images, API calls) matching by Referer
+    if (!targetRoute) {
       const referer = request.headers.get('Referer') || '';
-      if (referer.includes('/manage')) {
-        matchedPrefix = '/manage';
-        targetRoute = ROUTES['/manage'];
+      if (referer.includes('/meetly')) {
+        if (
+          pathname.startsWith('/_next/') ||
+          pathname.startsWith('/api/') ||
+          pathname.startsWith('/icons/') ||
+          pathname === '/icon.svg' ||
+          pathname === '/favicon.ico' ||
+          pathname === '/manifest.json'
+        ) {
+          matchedPrefix = '/meetly';
+          targetRoute = ROUTES['/meetly'];
+        }
       } else if (referer.includes('/lms')) {
-        matchedPrefix = '/lms';
-        targetRoute = ROUTES['/lms'];
-      } else if (referer.includes('/meetly')) {
-        matchedPrefix = '/meetly';
-        targetRoute = ROUTES['/meetly'];
+        if (pathname.startsWith('/_next/') || pathname.startsWith('/api/')) {
+          matchedPrefix = '/lms';
+          targetRoute = ROUTES['/lms'];
+        }
+      } else if (referer.includes('/manage')) {
+        if (pathname.startsWith('/assets/') || pathname.startsWith('/api/')) {
+          matchedPrefix = '/manage';
+          targetRoute = ROUTES['/manage'];
+        }
       }
     }
 
@@ -194,7 +207,29 @@ export default {
             .on('link[href]', {
               element(el) {
                 const href = el.getAttribute('href');
-                if (href && href.startsWith('/_next/')) {
+                if (href && (href.startsWith('/_next/') || href === '/icon.svg' || href.startsWith('/icons/'))) {
+                  el.setAttribute('href', '/meetly' + href);
+                }
+              },
+            })
+            .on('img[src]', {
+              element(el) {
+                const src = el.getAttribute('src');
+                if (src && (src.startsWith('/_next/') || src === '/icon.svg' || src.startsWith('/icons/'))) {
+                  el.setAttribute('src', '/meetly' + src);
+                }
+              },
+            })
+            .on('a[href]', {
+              element(el) {
+                const href = el.getAttribute('href');
+                if (
+                  href &&
+                  href.startsWith('/') &&
+                  !href.startsWith('//') &&
+                  !href.startsWith('/meetly') &&
+                  !href.startsWith('/_next')
+                ) {
                   el.setAttribute('href', '/meetly' + href);
                 }
               },
