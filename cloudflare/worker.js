@@ -139,6 +139,9 @@ export default {
             locationUrl.hostname = url.hostname;
             locationUrl.protocol = url.protocol;
             locationUrl.port = url.port;
+            if (matchedPrefix && !locationUrl.pathname.startsWith(matchedPrefix)) {
+              locationUrl.pathname = matchedPrefix + locationUrl.pathname;
+            }
           }
           const modifiedHeaders = new Headers(response.headers);
           modifiedHeaders.set('Location', locationUrl.toString());
@@ -150,33 +153,54 @@ export default {
         }
       }
 
-      // 7. Inject prefix into un-prefixed HTML assets for /manage using HTMLRewriter
+      // 7. Inject prefix into un-prefixed HTML assets using HTMLRewriter
       const contentType = response.headers.get('content-type') || '';
-      if (contentType.includes('text/html') && matchedPrefix === '/manage') {
-        return new HTMLRewriter()
-          .on('script[src]', {
-            element(el) {
-              const src = el.getAttribute('src');
-              if (src && src.startsWith('/assets/')) {
-                el.setAttribute('src', '/manage' + src);
-              }
-            },
-          })
-          .on('link[href]', {
-            element(el) {
-              const href = el.getAttribute('href');
-              if (
-                href &&
-                (href.startsWith('/assets/') ||
-                  href.startsWith('/icons/') ||
-                  href === '/logo.jpg' ||
-                  href === '/manifest.json')
-              ) {
-                el.setAttribute('href', '/manage' + href);
-              }
-            },
-          })
-          .transform(response);
+      if (contentType.includes('text/html')) {
+        if (matchedPrefix === '/manage') {
+          return new HTMLRewriter()
+            .on('script[src]', {
+              element(el) {
+                const src = el.getAttribute('src');
+                if (src && src.startsWith('/assets/')) {
+                  el.setAttribute('src', '/manage' + src);
+                }
+              },
+            })
+            .on('link[href]', {
+              element(el) {
+                const href = el.getAttribute('href');
+                if (
+                  href &&
+                  (href.startsWith('/assets/') ||
+                    href.startsWith('/icons/') ||
+                    href === '/logo.jpg' ||
+                    href === '/manifest.json')
+                ) {
+                  el.setAttribute('href', '/manage' + href);
+                }
+              },
+            })
+            .transform(response);
+        } else if (matchedPrefix === '/meetly') {
+          return new HTMLRewriter()
+            .on('script[src]', {
+              element(el) {
+                const src = el.getAttribute('src');
+                if (src && src.startsWith('/_next/')) {
+                  el.setAttribute('src', '/meetly' + src);
+                }
+              },
+            })
+            .on('link[href]', {
+              element(el) {
+                const href = el.getAttribute('href');
+                if (href && href.startsWith('/_next/')) {
+                  el.setAttribute('href', '/meetly' + href);
+                }
+              },
+            })
+            .transform(response);
+        }
       }
 
       return response;
