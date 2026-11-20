@@ -1,4 +1,4 @@
-.PHONY: dev build start lint
+.PHONY: dev build start lint docker-up docker-down docker-build
 
 dev:
 	npm run dev
@@ -11,3 +11,12 @@ start:
 
 lint:
 	npm run lint
+
+docker-build:
+	docker compose build
+
+docker-up:
+	docker compose up -d
+
+docker-down:
+	docker compose down
