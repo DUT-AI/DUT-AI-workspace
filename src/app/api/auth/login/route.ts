@@ -108,8 +108,10 @@ export async function POST(request: NextRequest) {
       pagination: null,
     });
 
-    const isProduction = process.env.NODE_ENV === 'production';
-    const cookieDomain = isProduction ? COOKIE_DOMAIN : undefined;
+    const hostname = request.headers.get('host') || '';
+    const isDutAiDomain = hostname.includes('dutai.io.vn');
+    const isHttps = request.nextUrl.protocol === 'https:' || request.headers.get('x-forwarded-proto') === 'https';
+    const cookieDomain = isDutAiDomain ? COOKIE_DOMAIN : undefined;
 
     // Set access_token cookie
     response.cookies.set({
@@ -118,7 +120,7 @@ export async function POST(request: NextRequest) {
       domain: cookieDomain,
       path: '/',
       httpOnly: true,
-      secure: isProduction,
+      secure: isHttps || isDutAiDomain,
       sameSite: 'lax',
       maxAge: 691200, // 8 days
     });
@@ -130,7 +132,7 @@ export async function POST(request: NextRequest) {
       domain: cookieDomain,
       path: '/',
       httpOnly: true,
-      secure: isProduction,
+      secure: isHttps || isDutAiDomain,
       sameSite: 'lax',
       maxAge: 604800, // 7 days
     });
