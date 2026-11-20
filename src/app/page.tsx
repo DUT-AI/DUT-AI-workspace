@@ -15,10 +15,18 @@ import {
   ExternalLink,
   ChevronRight,
   User,
+  Globe,
+  Bot,
+  Cpu,
+  FileText,
+  BarChart,
+  Terminal,
 } from 'lucide-react';
 import DutAiHeader from '@/components/common/DutAiHeader';
-import { WORKSPACE_APPS } from '@/config/apps';
-import { SSOIdentityClaim } from '@/types/sso';
+import { getActiveApps } from '@/lib/app-storage';
+import { SSOIdentityClaim, AppRegistryItem } from '@/types/sso';
+
+export const dynamic = 'force-dynamic';
 
 function getAuthenticatedUser(): SSOIdentityClaim | null {
   try {
@@ -47,6 +55,21 @@ function getAuthenticatedUser(): SSOIdentityClaim | null {
   }
 }
 
+const ICON_MAP: Record<string, React.ElementType> = {
+  LayoutDashboard,
+  GraduationCap,
+  CheckSquare,
+  Database,
+  Sparkles,
+  Globe,
+  Bot,
+  Cpu,
+  FileText,
+  BarChart,
+  Layers,
+  Terminal,
+};
+
 const APP_STYLE_MAP: Record<string, {
   gradient: string;
   badgeBg: string;
@@ -55,7 +78,6 @@ const APP_STYLE_MAP: Record<string, {
   hoverBorder: string;
   hoverText: string;
   footerText: string;
-  icon: React.ReactNode;
 }> = {
   manage: {
     gradient: 'from-blue-600 to-indigo-600 shadow-blue-500/20',
@@ -65,7 +87,6 @@ const APP_STYLE_MAP: Record<string, {
     hoverBorder: 'hover:border-blue-500/40 dark:hover:border-blue-500/40',
     hoverText: 'group-hover:text-blue-600 dark:group-hover:text-blue-400',
     footerText: 'text-blue-600 dark:text-blue-400',
-    icon: <LayoutDashboard className="w-7 h-7" />,
   },
   lms: {
     gradient: 'from-emerald-500 to-teal-600 shadow-emerald-500/20',
@@ -75,7 +96,6 @@ const APP_STYLE_MAP: Record<string, {
     hoverBorder: 'hover:border-emerald-500/40 dark:hover:border-emerald-500/40',
     hoverText: 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400',
     footerText: 'text-emerald-600 dark:text-emerald-400',
-    icon: <GraduationCap className="w-7 h-7" />,
   },
   meetly: {
     gradient: 'from-violet-600 to-purple-600 shadow-violet-500/20',
@@ -85,7 +105,6 @@ const APP_STYLE_MAP: Record<string, {
     hoverBorder: 'hover:border-violet-500/40 dark:hover:border-violet-500/40',
     hoverText: 'group-hover:text-violet-600 dark:group-hover:text-violet-400',
     footerText: 'text-violet-600 dark:text-violet-400',
-    icon: <CheckSquare className="w-7 h-7" />,
   },
   data: {
     gradient: 'from-amber-500 to-orange-600 shadow-amber-500/20',
@@ -95,18 +114,18 @@ const APP_STYLE_MAP: Record<string, {
     hoverBorder: 'hover:border-amber-500/40 dark:hover:border-amber-500/40',
     hoverText: 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
     footerText: 'text-amber-600 dark:text-amber-400',
-    icon: <Database className="w-7 h-7" />,
   },
 };
 
-export default function WorkspaceHubPage() {
+export default async function WorkspaceHubPage() {
   const user = getAuthenticatedUser();
   const userName = user?.name || null;
+  const apps = await getActiveApps();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
       {/* 1. Global Navigation Header */}
-      <DutAiHeader currentAppId="manage" currentUser={user} />
+      <DutAiHeader currentAppId="portal" currentUser={user} />
 
       {/* 2. Hero Section with Personalized Greeting */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 flex flex-col justify-center">
@@ -142,77 +161,99 @@ export default function WorkspaceHubPage() {
 
         {/* 3. Core App Launcher Grid Cards (Dynamic from Central Registry) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {WORKSPACE_APPS.map((app) => {
-            const style = APP_STYLE_MAP[app.id] || APP_STYLE_MAP.manage;
-            const tags = app.tags || [];
+          {apps.map((app) => {
+            const style = APP_STYLE_MAP[app.id] || {
+              gradient: 'from-indigo-600 to-blue-600 shadow-indigo-500/20',
+              badgeBg: 'bg-indigo-50 dark:bg-indigo-950/60',
+              badgeBorder: 'border-indigo-100 dark:border-indigo-900/60',
+              badgeText: 'text-indigo-700 dark:text-indigo-300',
+              hoverBorder: 'hover:border-indigo-500/40 dark:hover:border-indigo-500/40',
+              hoverText: 'group-hover:text-indigo-600 dark:group-hover:text-indigo-400',
+              footerText: 'text-indigo-600 dark:text-indigo-400',
+            };
+
+            const IconComponent = ICON_MAP[app.icon] || Sparkles;
 
             return (
               <a
                 key={app.id}
                 href={app.url}
-                className={`group relative flex flex-col justify-between p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl ${style.hoverBorder} transition-all duration-300 transform hover:-translate-y-1.5`}
+                className={`group relative flex flex-col justify-between p-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl ${style.hoverBorder} transition-all duration-300 hover:-translate-y-1.5 overflow-hidden`}
               >
                 <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-tr ${style.gradient} flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform duration-300`}>
-                      {style.icon}
+                  {/* Top Bar inside Card: Icon & Badge */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div
+                      className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${style.gradient} text-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300`}
+                    >
+                      <IconComponent className="w-7 h-7" />
                     </div>
-                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${style.badgeBg} ${style.badgeText} border ${style.badgeBorder}`}>
-                      {app.badge || 'Hệ sinh thái'}
-                    </span>
-                  </div>
 
-                  <h2 className={`text-xl font-bold text-slate-900 dark:text-white ${style.hoverText} transition-colors`}>
-                    {app.title}
-                  </h2>
-
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed line-clamp-3">
-                    {app.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-1.5 mt-4">
-                    {tags.map((tag) => (
+                    {app.badge && (
                       <span
-                        key={tag}
-                        className="text-xs px-2.5 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                        className={`text-xs font-semibold px-3 py-1 rounded-full ${style.badgeBg} border ${style.badgeBorder} ${style.badgeText} transition-colors`}
                       >
-                        {tag}
+                        {app.badge}
                       </span>
-                    ))}
+                    )}
                   </div>
+
+                  {/* Title & Description */}
+                  <div className="space-y-2 mb-6">
+                    <h2
+                      className={`text-xl font-bold tracking-tight text-slate-900 dark:text-white ${style.hoverText} transition-colors`}
+                    >
+                      {app.title}
+                    </h2>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3">
+                      {app.description}
+                    </p>
+                  </div>
+
+                  {/* Feature Tags */}
+                  {app.tags && app.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-6">
+                      {app.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                <div className={`mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-sm font-semibold ${style.footerText}`}>
-                  <span>Mở ứng dụng</span>
-                  <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
+                {/* Card Footer: Domain URL & Call-to-Action */}
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between mt-auto">
+                  <span className="text-xs font-mono text-slate-400 dark:text-slate-500 truncate max-w-[170px]">
+                    {app.url.replace('https://', '')}
+                  </span>
+
+                  <span
+                    className={`inline-flex items-center gap-1 text-xs font-bold ${style.footerText} group-hover:translate-x-1 transition-all`}
+                  >
+                    Truy cập
+                    <ArrowRight className="w-4 h-4" />
+                  </span>
                 </div>
               </a>
             );
           })}
         </div>
-
-        {/* 4. Bottom Ecosystem Status Banner */}
-        <div className="mt-12 p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-medium text-slate-700 dark:text-slate-300">
-              Trạng thái hệ sinh thái:
-            </span>
-            <span>Tất cả {WORKSPACE_APPS.length} phân hệ đang hoạt động ổn định</span>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <span className="text-slate-400 dark:text-slate-600">•</span>
-            <span>Single Sign-On (True SSO): Active</span>
-            <span className="text-slate-400 dark:text-slate-600">•</span>
-            <span>Bảo mật: HTTPS / HttpOnly Cookie</span>
-          </div>
-        </div>
       </main>
 
-      {/* 5. Minimal Footer */}
-      <footer className="border-t border-slate-200/60 dark:border-slate-800/60 py-6 text-center text-xs text-slate-400 dark:text-slate-500">
-        <p>© 2026 DUT-AI Workspace. Nền tảng tích hợp số Trường Đại học Bách Khoa - ĐHĐN.</p>
+      {/* 4. Footer */}
+      <footer className="border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p>© {new Date().getFullYear()} DUT-AI Team • Đại học Bách Khoa - ĐHĐN. Bảo lưu mọi quyền.</p>
+          <div className="flex items-center gap-4">
+            <span className="text-[11px] font-medium text-slate-400">
+              True Single Sign-On • Domain: <code className="text-indigo-400">.dutai.io.vn</code>
+            </span>
+          </div>
+        </div>
       </footer>
     </div>
   );

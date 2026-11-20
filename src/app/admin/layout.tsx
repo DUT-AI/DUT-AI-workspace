@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
 import Link from 'next/link';
 import {
@@ -17,6 +17,7 @@ import {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, isAdmin, status, logout } = useAuth();
 
   useEffect(() => {
@@ -86,10 +87,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <nav className="hidden md:flex items-center gap-1 text-sm font-medium text-slate-400 ml-4">
             <Link
               href="/admin"
-              className="px-3 py-1.5 rounded-lg text-white bg-slate-800/80 transition-colors flex items-center gap-1.5"
+              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+                pathname === '/admin'
+                  ? 'text-white bg-slate-800/80 font-semibold'
+                  : 'hover:text-white hover:bg-slate-800/50'
+              }`}
             >
               <Sliders className="w-4 h-4" />
               <span>Tổng quan</span>
+            </Link>
+            <Link
+              href="/admin/apps"
+              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+                pathname.startsWith('/admin/apps')
+                  ? 'text-white bg-slate-800/80 font-semibold'
+                  : 'hover:text-white hover:bg-slate-800/50'
+              }`}
+            >
+              <Layers className="w-4 h-4" />
+              <span>Quản lý Ứng dụng</span>
             </Link>
             <Link
               href="/"

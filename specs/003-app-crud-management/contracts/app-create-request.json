@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CreateAppRequest",
+  "type": "object",
+  "required": ["id", "title", "description", "icon", "url"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "minLength": 2,
+      "maxLength": 32,
+      "description": "Unique identifier slug"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "shortName": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "icon": {
+      "type": "string",
+      "minLength": 1
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "badge": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "accentColor": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "isActive": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false
+}

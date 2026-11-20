@@ -29,6 +29,33 @@ export interface AppRegistryItem {
   isActive?: boolean;
 }
 
+export interface CreateAppDto {
+  id: string;
+  title: string;
+  shortName?: string;
+  description: string;
+  icon: string;
+  url: string;
+  badge?: string;
+  tags?: string[];
+  accentColor?: string;
+  order?: number;
+  isActive?: boolean;
+}
+
+export interface UpdateAppDto {
+  title?: string;
+  shortName?: string;
+  description?: string;
+  icon?: string;
+  url?: string;
+  badge?: string;
+  tags?: string[];
+  accentColor?: string;
+  order?: number;
+  isActive?: boolean;
+}
+
 export interface AuthSessionState {
   isAuthenticated: boolean;
   user: SSOIdentityClaim | null;

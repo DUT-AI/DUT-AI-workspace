@@ -1,3 +1,4 @@
+import { NextRequest, NextResponse } from 'next/server';
 import { JwtPayload } from '@/types/auth';
 
 export const MANAGE_API_BASE = process.env.MANAGE_API_BASE || 'https://manage.dutai.io.vn';
@@ -51,4 +52,52 @@ export function buildExpiredCookieHeaders(): string[] {
     'access_token=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax',
     'refresh_token=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax',
   ];
+}
+
+/**
+ * Guard utility for API Route Handlers ensuring request originates from an Admin.
+ */
+export async function requireAdmin(request: NextRequest): Promise<
+  | { authorized: true; token: string; payload: JwtPayload }
+  | { authorized: false; errorResponse: NextResponse }
+> {
+  const cookieToken = request.cookies.get('access_token')?.value;
+  const authHeader = request.headers.get('authorization');
+  const bearerToken = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
+  const token = cookieToken || bearerToken;
+
+  if (!token) {
+    return {
+      authorized: false,
+      errorResponse: NextResponse.json(
+        {
+          is_success: false,
+          status_code: 401,
+          message: 'Vui lòng đăng nhập với tài khoản Quản trị viên để thực hiện thao tác này.',
+          data: null,
+          pagination: null,
+        },
+        { status: 401 }
+      ),
+    };
+  }
+
+  const payload = decodeJwtPayload(token);
+  if (!payload || !payload.roles || !hasAdminRole(payload.roles)) {
+    return {
+      authorized: false,
+      errorResponse: NextResponse.json(
+        {
+          is_success: false,
+          status_code: 403,
+          message: 'Tài khoản của bạn không có quyền Quản trị viên (Admin) để thực hiện thao tác này.',
+          data: null,
+          pagination: null,
+        },
+        { status: 403 }
+      ),
+    };
+  }
+
+  return { authorized: true, token, payload };
 }

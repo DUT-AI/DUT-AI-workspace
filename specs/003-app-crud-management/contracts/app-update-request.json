@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UpdateAppRequest",
+  "type": "object",
+  "properties": {
+    "title": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "shortName": { "type": "string", "maxLength": 50 },
+    "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "icon": { "type": "string", "minLength": 1 },
+    "url": { "type": "string", "format": "uri" },
+    "badge": { "type": "string", "maxLength": 40 },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "accentColor": { "type": "string" },
+    "order": { "type": "integer", "minimum": 0 },
+    "isActive": { "type": "boolean" }
+  },
+  "additionalProperties": false
+}

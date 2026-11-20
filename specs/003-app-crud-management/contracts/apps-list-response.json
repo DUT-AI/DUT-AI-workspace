@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AppsListResponse",
+  "type": "object",
+  "required": ["is_success", "status_code", "data"],
+  "properties": {
+    "is_success": { "type": "boolean" },
+    "status_code": { "type": "integer" },
+    "message": { "type": "string" },
+    "data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "description", "icon", "url", "order", "isActive"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "shortName": { "type": "string" },
+          "description": { "type": "string" },
+          "icon": { "type": "string" },
+          "url": { "type": "string" },
+          "badge": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "accentColor": { "type": "string" },
+          "order": { "type": "integer" },
+          "isActive": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

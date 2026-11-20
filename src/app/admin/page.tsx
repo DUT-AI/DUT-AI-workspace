@@ -38,10 +38,17 @@ export default function AdminDashboardPage() {
 
           <div className="flex items-center gap-3">
             <Link
-              href="/"
+              href="/admin/apps"
               className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
             >
-              <span>Xem Cổng Portal Hub</span>
+              <Layers className="w-4 h-4" />
+              <span>Quản lý Ứng dụng</span>
+            </Link>
+            <Link
+              href="/"
+              className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold rounded-xl transition-all flex items-center gap-2"
+            >
+              <span>Xem Portal Hub</span>
               <ExternalLink className="w-4 h-4" />
             </Link>
           </div>
@@ -98,14 +105,23 @@ export default function AdminDashboardPage() {
             <Server className="w-5 h-5 text-indigo-400" />
             <span>Các dịch vụ trong hệ sinh thái DUT-AI</span>
           </h2>
-          <Link
-            href="/api/v1/apps"
-            target="_blank"
-            className="text-xs text-slate-400 hover:text-indigo-400 transition-colors flex items-center gap-1"
-          >
-            <span>Registry API JSON</span>
-            <ExternalLink className="w-3 h-3" />
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/admin/apps"
+              className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1 bg-indigo-500/10 px-2.5 py-1 rounded-lg border border-indigo-500/20"
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>Quản lý & Thêm mới</span>
+            </Link>
+            <Link
+              href="/api/v1/apps"
+              target="_blank"
+              className="text-xs text-slate-400 hover:text-indigo-400 transition-colors flex items-center gap-1"
+            >
+              <span>Registry API</span>
+              <ExternalLink className="w-3 h-3" />
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
