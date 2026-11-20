@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   GraduationCap,
   CheckSquare,
+  Database,
   ArrowRight,
   ShieldCheck,
   BookOpen,
@@ -16,6 +17,7 @@ import {
   User,
 } from 'lucide-react';
 import DutAiHeader from '@/components/common/DutAiHeader';
+import { WORKSPACE_APPS } from '@/config/apps';
 import { SSOIdentityClaim } from '@/types/sso';
 
 function getAuthenticatedUser(): SSOIdentityClaim | null {
@@ -45,6 +47,58 @@ function getAuthenticatedUser(): SSOIdentityClaim | null {
   }
 }
 
+const APP_STYLE_MAP: Record<string, {
+  gradient: string;
+  badgeBg: string;
+  badgeBorder: string;
+  badgeText: string;
+  hoverBorder: string;
+  hoverText: string;
+  footerText: string;
+  icon: React.ReactNode;
+}> = {
+  manage: {
+    gradient: 'from-blue-600 to-indigo-600 shadow-blue-500/20',
+    badgeBg: 'bg-blue-50 dark:bg-blue-950/60',
+    badgeBorder: 'border-blue-100 dark:border-blue-900/60',
+    badgeText: 'text-blue-700 dark:text-blue-300',
+    hoverBorder: 'hover:border-blue-500/40 dark:hover:border-blue-500/40',
+    hoverText: 'group-hover:text-blue-600 dark:group-hover:text-blue-400',
+    footerText: 'text-blue-600 dark:text-blue-400',
+    icon: <LayoutDashboard className="w-7 h-7" />,
+  },
+  lms: {
+    gradient: 'from-emerald-500 to-teal-600 shadow-emerald-500/20',
+    badgeBg: 'bg-emerald-50 dark:bg-emerald-950/60',
+    badgeBorder: 'border-emerald-100 dark:border-emerald-900/60',
+    badgeText: 'text-emerald-700 dark:text-emerald-300',
+    hoverBorder: 'hover:border-emerald-500/40 dark:hover:border-emerald-500/40',
+    hoverText: 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400',
+    footerText: 'text-emerald-600 dark:text-emerald-400',
+    icon: <GraduationCap className="w-7 h-7" />,
+  },
+  meetly: {
+    gradient: 'from-violet-600 to-purple-600 shadow-violet-500/20',
+    badgeBg: 'bg-violet-50 dark:bg-violet-950/60',
+    badgeBorder: 'border-violet-100 dark:border-violet-900/60',
+    badgeText: 'text-violet-700 dark:text-violet-300',
+    hoverBorder: 'hover:border-violet-500/40 dark:hover:border-violet-500/40',
+    hoverText: 'group-hover:text-violet-600 dark:group-hover:text-violet-400',
+    footerText: 'text-violet-600 dark:text-violet-400',
+    icon: <CheckSquare className="w-7 h-7" />,
+  },
+  data: {
+    gradient: 'from-amber-500 to-orange-600 shadow-amber-500/20',
+    badgeBg: 'bg-amber-50 dark:bg-amber-950/60',
+    badgeBorder: 'border-amber-100 dark:border-amber-900/60',
+    badgeText: 'text-amber-700 dark:text-amber-300',
+    hoverBorder: 'hover:border-amber-500/40 dark:hover:border-amber-500/40',
+    hoverText: 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
+    footerText: 'text-amber-600 dark:text-amber-400',
+    icon: <Database className="w-7 h-7" />,
+  },
+};
+
 export default function WorkspaceHubPage() {
   const user = getAuthenticatedUser();
   const userName = user?.name || null;
@@ -55,21 +109,28 @@ export default function WorkspaceHubPage() {
       <DutAiHeader currentAppId="manage" currentUser={user} />
 
       {/* 2. Hero Section with Personalized Greeting */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 flex flex-col justify-center">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 flex flex-col justify-center">
         <div className="space-y-4 mb-10 text-center sm:text-left">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200/60 dark:border-blue-900/60 text-blue-700 dark:text-blue-300 text-xs font-semibold tracking-wide">
             <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             <span>Hệ sinh thái DUT-AI Unified Workspace</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
             {userName ? (
               <>
-                Xin chào, <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">{userName}</span> 👋
+                Xin chào,{' '}
+                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                  {userName}
+                </span>{' '}
+                👋
               </>
             ) : (
               <>
-                Chào mừng đến với <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">DUT-AI Workspace</span>
+                Chào mừng đến với{' '}
+                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                  DUT-AI Workspace
+                </span>
               </>
             )}
           </h1>
@@ -79,133 +140,55 @@ export default function WorkspaceHubPage() {
           </p>
         </div>
 
-        {/* 3. Three Core App Launcher Grid Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          {/* Card 1: DUT-AI Management */}
-          <a
-            href="/manage/dashboard"
-            className="group relative flex flex-col justify-between p-7 rounded-3xl bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-500/40 dark:hover:border-blue-500/40 transition-all duration-300 transform hover:-translate-y-1.5"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-5">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform duration-300">
-                  <LayoutDashboard className="w-7 h-7" />
+        {/* 3. Core App Launcher Grid Cards (Dynamic from Central Registry) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {WORKSPACE_APPS.map((app) => {
+            const style = APP_STYLE_MAP[app.id] || APP_STYLE_MAP.manage;
+            const tags = app.tags || [];
+
+            return (
+              <a
+                key={app.id}
+                href={app.url}
+                className={`group relative flex flex-col justify-between p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl ${style.hoverBorder} transition-all duration-300 transform hover:-translate-y-1.5`}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-tr ${style.gradient} flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform duration-300`}>
+                      {style.icon}
+                    </div>
+                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${style.badgeBg} ${style.badgeText} border ${style.badgeBorder}`}>
+                      {app.badge || 'Hệ sinh thái'}
+                    </span>
+                  </div>
+
+                  <h2 className={`text-xl font-bold text-slate-900 dark:text-white ${style.hoverText} transition-colors`}>
+                    {app.title}
+                  </h2>
+
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed line-clamp-3">
+                    {app.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-1.5 mt-4">
+                    {tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs px-2.5 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/60">
-                  Quản trị
-                </span>
-              </div>
 
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                DUT-AI Management
-              </h2>
-
-              <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-                Bảng điều khiển quản trị trung tâm, quản lý người dùng, lớp học, phân quyền giảng viên và theo dõi tài nguyên hệ thống.
-              </p>
-
-              <div className="flex flex-wrap gap-2 mt-4">
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                  Tài khoản
-                </span>
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                  Phân quyền
-                </span>
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                  Thống kê
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-sm font-semibold text-blue-600 dark:text-blue-400">
-              <span>Vào Bảng Quản trị</span>
-              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
-            </div>
-          </a>
-
-          {/* Card 2: DUT-AI LMS */}
-          <a
-            href="/lms/dashboard"
-            className="group relative flex flex-col justify-between p-7 rounded-3xl bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-emerald-500/40 dark:hover:border-emerald-500/40 transition-all duration-300 transform hover:-translate-y-1.5"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-5">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-300">
-                  <GraduationCap className="w-7 h-7" />
+                <div className={`mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-sm font-semibold ${style.footerText}`}>
+                  <span>Mở ứng dụng</span>
+                  <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
                 </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/60">
-                  Học tập & Khảo sát
-                </span>
-              </div>
-
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                DUT-AI LMS
-              </h2>
-
-              <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-                Nền tảng thi trắc nghiệm thông minh, làm bài tập về nhà, ngân hàng câu hỏi khảo sát và bảng xếp hạng thành tích sinh viên.
-              </p>
-
-              <div className="flex flex-wrap gap-2 mt-4">
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                  Thi trắc nghiệm
-                </span>
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                  Bài tập
-                </span>
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                  Khảo sát
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-              <span>Vào Cổng Học tập</span>
-              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
-            </div>
-          </a>
-
-          {/* Card 3: Meetly Tasks */}
-          <a
-            href="/meetly/tasks"
-            className="group relative flex flex-col justify-between p-7 rounded-3xl bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-violet-500/40 dark:hover:border-violet-500/40 transition-all duration-300 transform hover:-translate-y-1.5"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-5">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-violet-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-violet-500/20 group-hover:scale-105 transition-transform duration-300">
-                  <CheckSquare className="w-7 h-7" />
-                </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-violet-50 dark:bg-violet-950/60 text-violet-700 dark:text-violet-300 border border-violet-100 dark:border-violet-900/60">
-                  Công việc & Lịch trình
-                </span>
-              </div>
-
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
-                Meetly Tasks
-              </h2>
-
-              <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-                Quản lý công việc trực quan với bảng Kanban, ghi chú cuộc họp nhóm, quản trị dự án và theo dõi tiến độ công tác khoa.
-              </p>
-
-              <div className="flex flex-wrap gap-2 mt-4">
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                  Bảng Kanban
-                </span>
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                  Cuộc họp
-                </span>
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                  Dự án
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-sm font-semibold text-violet-600 dark:text-violet-400">
-              <span>Vào Bảng Công việc</span>
-              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
-            </div>
-          </a>
+              </a>
+            );
+          })}
         </div>
 
         {/* 4. Bottom Ecosystem Status Banner */}
@@ -215,12 +198,12 @@ export default function WorkspaceHubPage() {
             <span className="font-medium text-slate-700 dark:text-slate-300">
               Trạng thái hệ sinh thái:
             </span>
-            <span>Tất cả dịch vụ Quản lý, LMS và Meetly đang hoạt động ổn định</span>
+            <span>Tất cả {WORKSPACE_APPS.length} phân hệ đang hoạt động ổn định</span>
           </div>
 
           <div className="flex items-center gap-4">
             <span className="text-slate-400 dark:text-slate-600">•</span>
-            <span>Single Sign-On: Hoạt động</span>
+            <span>Single Sign-On (True SSO): Active</span>
             <span className="text-slate-400 dark:text-slate-600">•</span>
             <span>Bảo mật: HTTPS / HttpOnly Cookie</span>
           </div>

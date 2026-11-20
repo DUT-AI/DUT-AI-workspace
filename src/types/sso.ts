@@ -17,10 +17,16 @@ export interface SSOIdentityClaim {
 export interface AppRegistryItem {
   id: string;
   title: string;
+  shortName?: string;
   description: string;
   icon: string;
-  path: string;
+  url: string;
+  path?: string;
+  badge?: string;
+  tags?: string[];
   accentColor?: string;
+  order?: number;
+  isActive?: boolean;
 }
 
 export interface AuthSessionState {

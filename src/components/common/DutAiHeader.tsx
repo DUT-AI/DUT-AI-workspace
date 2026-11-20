@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   GraduationCap,
   CheckSquare,
+  Database,
   ExternalLink,
   ChevronDown,
   Sparkles,
@@ -17,7 +18,7 @@ import { WORKSPACE_APPS } from '@/config/apps';
 import { AppRegistryItem, SSOIdentityClaim } from '@/types/sso';
 
 interface DutAiHeaderProps {
-  currentAppId?: 'manage' | 'lms' | 'meetly';
+  currentAppId?: 'manage' | 'lms' | 'meetly' | 'data' | string;
   currentUser?: SSOIdentityClaim | null;
   onLogout?: () => void;
 }
@@ -64,6 +65,8 @@ export function DutAiHeader({ currentAppId = 'manage', currentUser, onLogout }: 
         return <GraduationCap className="w-5 h-5 text-emerald-500" />;
       case 'CheckSquare':
         return <CheckSquare className="w-5 h-5 text-violet-500" />;
+      case 'Database':
+        return <Database className="w-5 h-5 text-amber-500" />;
       default:
         return <Sparkles className="w-5 h-5 text-indigo-500" />;
     }
