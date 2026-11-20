@@ -24,6 +24,10 @@ const ROUTES = {
     upstream: 'https://meetly.dutai.io.vn',
     name: 'Meetly Tasks',
   },
+  '/data': {
+    upstream: 'https://dataplatform.dutai.io.vn',
+    name: 'DUT-AI Data Platform',
+  },
 };
 
 export default {
@@ -49,6 +53,9 @@ export default {
     }
     if (pathname === '/meetly' || pathname === '/meetly/') {
       return Response.redirect(`${url.origin}/meetly/tasks${search}`, 302);
+    }
+    if (pathname === '/data' || pathname === '/data/') {
+      return Response.redirect(`${url.origin}/data/dashboard${search}`, 302);
     }
 
     if (pathname === '/login') {
@@ -107,6 +114,16 @@ export default {
         if (pathname.startsWith('/assets/') || pathname.startsWith('/api/')) {
           matchedPrefix = '/manage';
           targetRoute = ROUTES['/manage'];
+        }
+      } else if (referer.includes('/data')) {
+        if (
+          pathname.startsWith('/_next/') ||
+          pathname.startsWith('/assets/') ||
+          pathname.startsWith('/api/') ||
+          pathname.startsWith('/static/')
+        ) {
+          matchedPrefix = '/data';
+          targetRoute = ROUTES['/data'];
         }
       }
     }
@@ -505,6 +522,7 @@ function renderWorkspaceHub(user) {
     .card-manage:hover { border-color: rgba(59, 130, 246, 0.4); background: rgba(30, 41, 59, 0.7); }
     .card-lms:hover { border-color: rgba(16, 185, 129, 0.4); background: rgba(30, 41, 59, 0.7); }
     .card-meetly:hover { border-color: rgba(139, 92, 246, 0.4); background: rgba(30, 41, 59, 0.7); }
+    .card-data:hover { border-color: rgba(245, 158, 11, 0.4); background: rgba(30, 41, 59, 0.7); }
 
     .card-top {
       display: flex;
@@ -523,6 +541,7 @@ function renderWorkspaceHub(user) {
     .icon-manage { background: linear-gradient(135deg, #2563eb, #3b82f6); box-shadow: 0 8px 16px rgba(37, 99, 235, 0.25); }
     .icon-lms { background: linear-gradient(135deg, #059669, #10b981); box-shadow: 0 8px 16px rgba(16, 185, 129, 0.25); }
     .icon-meetly { background: linear-gradient(135deg, #7c3aed, #8b5cf6); box-shadow: 0 8px 16px rgba(139, 92, 246, 0.25); }
+    .icon-data { background: linear-gradient(135deg, #d97706, #f59e0b); box-shadow: 0 8px 16px rgba(245, 158, 11, 0.25); }
 
     .card-badge {
       font-size: 11px;
@@ -560,6 +579,7 @@ function renderWorkspaceHub(user) {
     .color-manage { color: #60a5fa; }
     .color-lms { color: #34d399; }
     .color-meetly { color: #a78bfa; }
+    .color-data { color: #fbbf24; }
 
     /* Ecosystem Status */
     .status-bar {
@@ -639,6 +659,15 @@ function renderWorkspaceHub(user) {
           <div>
             <div>Meetly Công việc</div>
             <div class="waffle-item-desc">Kanban & lịch trình cuộc họp</div>
+          </div>
+        </a>
+        <a href="/data/dashboard" class="waffle-item">
+          <div class="card-icon icon-data" style="width:36px;height:36px;border-radius:10px;">
+            <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          </div>
+          <div>
+            <div>DUT-AI Data Platform</div>
+            <div class="waffle-item-desc">Quản lý dataset & ontology AI</div>
           </div>
         </a>
       </div>
@@ -742,13 +771,36 @@ function renderWorkspaceHub(user) {
           <span>&rarr;</span>
         </div>
       </a>
+
+      <!-- Card 4: DUT-AI Data Platform -->
+      <a href="/data/dashboard" class="app-card card-data">
+        <div>
+          <div class="card-top">
+            <div class="card-icon icon-data">
+              <svg width="26" height="26" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            </div>
+            <span class="card-badge">Dữ liệu & Gán nhãn</span>
+          </div>
+          <div class="card-title">DUT-AI Data Platform</div>
+          <p class="card-desc">Quản lý dataset, ontology và gán nhãn dữ liệu AI phục vụ huấn luyện và đánh giá mô hình trí tuệ nhân tạo.</p>
+          <div class="tags">
+            <span class="tag">Dataset</span>
+            <span class="tag">Ontology</span>
+            <span class="tag">Gán nhãn AI</span>
+          </div>
+        </div>
+        <div class="card-footer color-data">
+          <span>Vào Data Platform</span>
+          <span>&rarr;</span>
+        </div>
+      </a>
     </div>
 
     <!-- Ecosystem Status -->
     <div class="status-bar">
       <div>
         <span class="live-dot"></span>
-        <strong style="color:#e2e8f0;">Hệ sinh thái DUT-AI:</strong> Tất cả dịch vụ Quản lý, LMS và Meetly đang hoạt động ổn định
+        <strong style="color:#e2e8f0;">Hệ sinh thái DUT-AI:</strong> Tất cả dịch vụ Quản lý, LMS, Meetly và Data Platform đang hoạt động ổn định
       </div>
       <div>
         <span>Single Sign-On (True SSO) Active</span>
