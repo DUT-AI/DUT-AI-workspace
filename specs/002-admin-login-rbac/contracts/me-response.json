@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AuthMeResponse",
+  "description": "Response envelope returned by GET /api/v1/auth/me",
+  "type": "object",
+  "required": ["is_success", "status_code", "data"],
+  "properties": {
+    "is_success": {
+      "type": "boolean"
+    },
+    "status_code": {
+      "type": "integer"
+    },
+    "message": {
+      "type": "string"
+    },
+    "data": {
+      "type": ["object", "null"],
+      "required": ["id", "name", "email", "status", "role_names", "permissions"],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "is_deleted": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "avatar_url": {
+          "type": ["string", "null"]
+        },
+        "zalo_bot_id": {
+          "type": ["string", "null"]
+        },
+        "role_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "pagination": {
+      "type": ["object", "null"]
+    }
+  }
+}
