@@ -55,51 +55,7 @@ export async function POST(request: NextRequest) {
 
     const { access_token, refresh_token } = manageData.data;
 
-    // RBAC Check: Verify user has Admin role
-    let isAdmin = false;
-
-    // Check 1: fast decode JWT payload
-    const payload = decodeJwtPayload(access_token);
-    if (payload && payload.roles) {
-      isAdmin = hasAdminRole(payload.roles);
-    }
-
-    // Check 2: verify against /me for freshest role data
-    if (!isAdmin) {
-      try {
-        const meRes = await fetch(`${MANAGE_API_BASE}/api/v1/auth/me`, {
-          headers: {
-            Cookie: `access_token=${access_token}`,
-            Accept: 'application/json',
-          },
-          cache: 'no-store',
-        });
-        if (meRes.ok) {
-          const meData: AuthApiResponse<AdminUserProfile> = await meRes.json();
-          if (meData.is_success && meData.data) {
-            isAdmin = hasAdminRole(meData.data.role_names);
-          }
-        }
-      } catch (meErr) {
-        console.error('Failed to verify roles against /me:', meErr);
-      }
-    }
-
-    // Reject non-admin users with 403 Forbidden
-    if (!isAdmin) {
-      return NextResponse.json<AuthApiResponse<null>>(
-        {
-          is_success: false,
-          status_code: 403,
-          message: 'Tài khoản của bạn không có quyền truy cập trang quản trị. Chỉ quản trị viên (Admin) mới có quyền truy cập.',
-          data: null,
-          pagination: null,
-        },
-        { status: 403 }
-      );
-    }
-
-    // Admin verified: create success response and set SSO cookies
+    // Create success response and set SSO cookies
     const response = NextResponse.json<AuthApiResponse<AuthTokenData>>({
       is_success: true,
       status_code: 200,

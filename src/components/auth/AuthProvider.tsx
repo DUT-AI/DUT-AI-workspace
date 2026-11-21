@@ -41,13 +41,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const body: AuthApiResponse<AdminUserProfile & { is_admin: boolean }> = await res.json();
         if (body.is_success && body.data) {
           setUser(body.data);
-          if (body.data.is_admin) {
-            setStatus('authenticated');
-            setError(null);
-          } else {
-            setStatus('forbidden');
-            setError('Tài khoản của bạn không có quyền truy cập trang quản trị. Chỉ quản trị viên (Admin) mới có quyền truy cập.');
-          }
+          setStatus('authenticated');
+          setError(null);
           return;
         }
       }

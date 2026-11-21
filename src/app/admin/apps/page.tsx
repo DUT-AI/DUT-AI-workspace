@@ -1,13 +1,34 @@
+'use client';
+
 import React from 'react';
 import { AppList } from '@/components/admin/AppList';
-import { Layers } from 'lucide-react';
-
-export const metadata = {
-  title: 'Quản lý Ứng dụng | DUT-AI Admin',
-  description: 'Quản lý danh sách các trang web và dịch vụ trong hệ sinh thái DUT-AI Workspace',
-};
+import { useAuth } from '@/components/auth/AuthProvider';
+import { Layers, ShieldAlert } from 'lucide-react';
+import Link from 'next/link';
 
 export default function AdminAppsPage() {
+  const { isAdmin } = useAuth();
+
+  if (!isAdmin) {
+    return (
+      <div className="py-12 flex flex-col items-center justify-center text-center">
+        <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-4">
+          <ShieldAlert className="w-8 h-8" />
+        </div>
+        <h2 className="text-xl font-bold text-white mb-2">Quyền truy cập bị giới hạn</h2>
+        <p className="text-sm text-slate-400 max-w-md mb-6 leading-relaxed">
+          Chỉ có tài khoản Quản trị viên (Admin) mới có quyền truy cập và quản lý ứng dụng hệ thống (/admin/apps).
+        </p>
+        <Link
+          href="/admin"
+          className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl transition-colors"
+        >
+          Quay lại Bảng điều khiển Admin
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Page Header */}

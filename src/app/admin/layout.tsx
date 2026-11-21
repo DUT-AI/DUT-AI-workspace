@@ -35,7 +35,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  if (status === 'forbidden' || !isAdmin) {
+  if (status === 'forbidden') {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center px-4">
         <div className="max-w-md w-full bg-slate-900 border border-red-500/30 rounded-2xl p-8 text-center shadow-2xl">
@@ -44,7 +44,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
           <h2 className="text-xl font-bold text-white mb-2">Truy cập bị từ chối (403)</h2>
           <p className="text-sm text-slate-300 mb-6 leading-relaxed">
-            Tài khoản <span className="font-semibold text-white">{user?.email || 'hiện tại'}</span> không có quyền Quản trị viên (Admin) để truy cập không gian này.
+            Tài khoản <span className="font-semibold text-white">{user?.email || 'hiện tại'}</span> không có quyền truy cập không gian này.
           </p>
           <div className="flex flex-col gap-3">
             <Link
@@ -96,17 +96,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Sliders className="w-4 h-4" />
               <span>Tổng quan</span>
             </Link>
-            <Link
-              href="/admin/apps"
-              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-                pathname.startsWith('/admin/apps')
-                  ? 'text-white bg-slate-800/80 font-semibold'
-                  : 'hover:text-white hover:bg-slate-800/50'
-              }`}
-            >
-              <Layers className="w-4 h-4" />
-              <span>Quản lý Ứng dụng</span>
-            </Link>
+            {isAdmin && (
+              <Link
+                href="/admin/apps"
+                className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+                  pathname.startsWith('/admin/apps')
+                    ? 'text-white bg-slate-800/80 font-semibold'
+                    : 'hover:text-white hover:bg-slate-800/50'
+                }`}
+              >
+                <Layers className="w-4 h-4" />
+                <span>Quản lý Ứng dụng</span>
+              </Link>
+            )}
             <Link
               href="/"
               className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800/50 transition-colors flex items-center gap-1.5"
@@ -135,8 +137,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <span className="text-xs font-semibold text-white leading-tight">{user?.name}</span>
               <span className="text-[10px] text-slate-400 leading-tight">{user?.email}</span>
             </div>
-            <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 ml-1">
-              Admin
+            <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded border ml-1 ${
+              isAdmin
+                ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30'
+                : 'bg-slate-700/50 text-slate-300 border-slate-600/40'
+            }`}>
+              {isAdmin ? 'Admin' : 'Thành viên'}
             </span>
           </div>
 

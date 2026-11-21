@@ -16,7 +16,7 @@ import {
 import Link from 'next/link';
 
 export default function AdminDashboardPage() {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   return (
     <div className="space-y-8">
@@ -37,13 +37,15 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Link
-              href="/admin/apps"
-              className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
-            >
-              <Layers className="w-4 h-4" />
-              <span>Quản lý Ứng dụng</span>
-            </Link>
+            {isAdmin && (
+              <Link
+                href="/admin/apps"
+                className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
+              >
+                <Layers className="w-4 h-4" />
+                <span>Quản lý Ứng dụng</span>
+              </Link>
+            )}
             <Link
               href="/"
               className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold rounded-xl transition-all flex items-center gap-2"
@@ -106,13 +108,15 @@ export default function AdminDashboardPage() {
             <span>Các dịch vụ trong hệ sinh thái DUT-AI</span>
           </h2>
           <div className="flex items-center gap-3">
-            <Link
-              href="/admin/apps"
-              className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1 bg-indigo-500/10 px-2.5 py-1 rounded-lg border border-indigo-500/20"
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span>Quản lý & Thêm mới</span>
-            </Link>
+            {isAdmin && (
+              <Link
+                href="/admin/apps"
+                className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1 bg-indigo-500/10 px-2.5 py-1 rounded-lg border border-indigo-500/20"
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span>Quản lý & Thêm mới</span>
+              </Link>
+            )}
             <Link
               href="/api/v1/apps"
               target="_blank"

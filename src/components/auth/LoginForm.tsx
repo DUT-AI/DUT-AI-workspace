@@ -27,20 +27,20 @@ export function LoginForm({ defaultRedirect = '/admin' }: LoginFormProps) {
   // Check URL query error or auth context error
   useEffect(() => {
     if (urlError === 'forbidden') {
-      setErrorMessage('Tài khoản của bạn không có quyền truy cập trang quản trị. Chỉ quản trị viên (Admin) mới có quyền truy cập.');
+      setErrorMessage('Tài khoản của bạn không có quyền truy cập không gian này.');
     } else if (urlError === 'unauthorized') {
-      setErrorMessage('Vui lòng đăng nhập với tài khoản Quản trị viên để tiếp tục.');
+      setErrorMessage('Vui lòng đăng nhập để tiếp tục.');
     } else if (authError) {
       setErrorMessage(authError);
     }
   }, [urlError, authError]);
 
-  // If already authenticated as admin, redirect automatically
+  // If already authenticated, redirect automatically
   useEffect(() => {
-    if (status === 'authenticated' && isAdmin) {
+    if (status === 'authenticated') {
       router.replace(redirectUrl);
     }
-  }, [status, isAdmin, redirectUrl, router]);
+  }, [status, redirectUrl, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,7 +78,7 @@ export function LoginForm({ defaultRedirect = '/admin' }: LoginFormProps) {
             <ShieldCheck className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">DUT-AI Workspace</h1>
-          <p className="text-sm text-slate-400 mt-1">Đăng nhập tài khoản Quản trị viên (Admin)</p>
+          <p className="text-sm text-slate-400 mt-1">Đăng nhập tài khoản</p>
         </div>
 
         {errorMessage && (
@@ -91,7 +91,7 @@ export function LoginForm({ defaultRedirect = '/admin' }: LoginFormProps) {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-              Email Quản trị
+              Email
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
@@ -101,7 +101,7 @@ export function LoginForm({ defaultRedirect = '/admin' }: LoginFormProps) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@dutai.io.vn"
+                placeholder="user@dutai.io.vn"
                 disabled={isSubmitting}
                 required
                 className="w-full pl-11 pr-4 py-3 bg-slate-950/80 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors disabled:opacity-50 text-sm"
@@ -148,7 +148,7 @@ export function LoginForm({ defaultRedirect = '/admin' }: LoginFormProps) {
                 <span>Đang xác thực...</span>
               </>
             ) : (
-              <span>Đăng nhập vào Quản trị</span>
+              <span>Đăng nhập</span>
             )}
           </button>
         </form>

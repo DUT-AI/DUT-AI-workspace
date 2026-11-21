@@ -15,23 +15,22 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(redirectUrl);
     }
 
-    // Fast JWT role check on Edge
-    const payload = decodeJwtPayload(accessToken);
-    if (!payload || !payload.roles || !hasAdminRole(payload.roles)) {
-      const forbiddenUrl = new URL('/login', request.url);
-      forbiddenUrl.searchParams.set('error', 'forbidden');
-      return NextResponse.redirect(forbiddenUrl);
+    // Only /admin/apps (and sub-routes) strictly requires admin role
+    if (pathname.startsWith('/admin/apps')) {
+      const payload = decodeJwtPayload(accessToken);
+      if (!payload || !payload.roles || !hasAdminRole(payload.roles)) {
+        const forbiddenUrl = new URL('/admin', request.url);
+        forbiddenUrl.searchParams.set('error', 'forbidden_apps');
+        return NextResponse.redirect(forbiddenUrl);
+      }
     }
   }
 
-  // 2. Auto-redirect from /login if already authenticated as Admin
+  // 2. Auto-redirect from /login if already authenticated
   if (pathname === '/login') {
     if (accessToken) {
-      const payload = decodeJwtPayload(accessToken);
-      if (payload && payload.roles && hasAdminRole(payload.roles)) {
-        const redirectTo = request.nextUrl.searchParams.get('redirect') || '/admin';
-        return NextResponse.redirect(new URL(redirectTo, request.url));
-      }
+      const redirectTo = request.nextUrl.searchParams.get('redirect') || '/admin';
+      return NextResponse.redirect(new URL(redirectTo, request.url));
     }
   }
 

@@ -113,8 +113,8 @@ export function DutAiHeader({ currentAppId = 'portal', currentUser, onLogout }: 
 
       {/* Right: Actions, 9-Dots Waffle Menu, User Profile */}
       <div className="flex items-center gap-2">
-        {/* Admin Link if authorized */}
-        {isAdmin && (
+        {/* Admin Link if logged in */}
+        {effectiveUser && (
           <Link
             href="/admin"
             className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20 text-xs font-semibold transition-colors"
@@ -233,16 +233,14 @@ export function DutAiHeader({ currentAppId = 'portal', currentUser, onLogout }: 
                 </div>
 
                 <div className="pt-1 space-y-0.5">
-                  {isAdmin && (
-                    <Link
-                      href="/admin"
-                      onClick={() => setIsProfileOpen(false)}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-left"
-                    >
-                      <ShieldCheck className="w-4 h-4 text-indigo-400" />
-                      <span>Trang Quản trị Workspace</span>
-                    </Link>
-                  )}
+                  <Link
+                    href="/admin"
+                    onClick={() => setIsProfileOpen(false)}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-left"
+                  >
+                    <ShieldCheck className="w-4 h-4 text-indigo-400" />
+                    <span>Trang Quản trị Workspace</span>
+                  </Link>
 
                   <button
                     type="button"
